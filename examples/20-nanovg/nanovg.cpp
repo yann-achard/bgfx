@@ -1309,74 +1309,31 @@ void drawScissor(struct NVGcontext* vg, float x, float y, float t)
 	nvgRestore(vg);
 }
 
-void renderDemo(struct NVGcontext* vg, float mx, float my, float width, float height, float t, int blowup, struct DemoData* data)
+void drawSquare(struct NVGcontext* nvg, float x, float y)
 {
-	float x,y,popx,popy;
+	nvgBeginPath(nvg);
+	nvgMoveTo(nvg, x, y);
+	nvgLineTo(nvg, x + 10, y);
+	nvgLineTo(nvg, x + 10, y + 10);
+	nvgLineTo(nvg, x, y + 10);
+	nvgLineTo(nvg, x, y);
+}
 
-	drawEyes(vg, width-800, height-240, 150, 100, mx, my, t);
-	drawParagraph(vg, width - 550, 35, 150, 100, mx, my);
-	drawGraph(vg, 0, height/2, width, height/2, t);
+void renderDemo(struct NVGcontext* nvg, float , float , float width, float height, float , int , struct DemoData* )
+{
+	//const float increment = 1; // <= Causes crash
+	const float increment = 15; // <= Causes bad rendering
+	//const float increment = 50; // <= Looks fine
 
-	drawColorwheel(vg, width-350, 35, 250.0f, 250.0f, t);
-
-	// Line joints
-	drawLines(vg, 50, height-50, 600, 35, t);
-
-	// Line caps
-	drawWidths(vg, width-50, 35, 30);
-
-	// Line caps
-	drawCaps(vg, width-50, 260, 30);
-
-	drawScissor(vg, 40, height-150, t);
-
-	nvgSave(vg);
-	if (blowup)
+	for (float x = 0; x < width; x += increment)
 	{
-		nvgRotate(vg, sinf(t*0.3f)*5.0f/180.0f*NVG_PI);
-		nvgScale(vg, 2.0f, 2.0f);
+		for (float y = 0; y < height; y += increment)
+		{
+			drawSquare(nvg, x, y);
+			nvgFillColor(nvg, nvgRGBAf(x / width, 0.5, 0.5, 1));
+			nvgFill(nvg);
+		}
 	}
-
-	// Widgets.
-	x = width-520; y = height-420;
-	drawWindow(vg, "Widgets `n Stuff", x, y, 300, 400);
-	x += 10;
-	y += 45;
-	drawSearchBox(vg, "Search", x,y,280,25);
-	y += 40;
-	drawDropDown(vg, "Effects", x,y,280,28);
-	popx = x + 300;
-	popy = y + 14;
-	y += 45;
-
-	// Form
-	drawLabel(vg, "Login", x,y, 280,20);
-	y += 25;
-	drawEditBox(vg, "Email",  x,y, 280,28);
-	y += 35;
-	drawEditBox(vg, "Password", x,y, 280,28);
-	y += 38;
-	drawCheckBox(vg, "Remember me", x,y, 140,28);
-	drawButton(vg, ICON_LOGIN, "Sign in", x+138, y, 140, 28, nvgRGBA(0,96,128,255) );
-	y += 45;
-
-	// Slider
-	drawLabel(vg, "Diameter", x,y, 280,20);
-	y += 25;
-	drawEditBoxNum(vg, "123.00", "px", x+180,y, 100,28);
-	drawSlider(vg, 0.4f, x,y, 170,28);
-	y += 55;
-
-	drawButton(vg, ICON_TRASH, "Delete", x, y, 160, 28, nvgRGBA(128,16,8,255) );
-	drawButton(vg, 0, "Cancel", x+170, y, 110, 28, nvgRGBA(0,0,0,0) );
-
-	// Thumbnails box
-	drawThumbnails(vg, popx, popy-30, 160, 300, data->images, 12, t);
-
-	// Blendish
-	drawBlendish(vg, 10, 62, 600.0f, 420.0f, t);
-
-	nvgRestore(vg);
 }
 
 class ExampleNanoVG : public entry::AppI
@@ -1446,19 +1403,19 @@ public:
 	{
 		if (!entry::processEvents(m_width, m_height, m_debug, m_reset, &m_mouseState) )
 		{
-			imguiBeginFrame(m_mouseState.m_mx
-				,  m_mouseState.m_my
-				, (m_mouseState.m_buttons[entry::MouseButton::Left  ] ? IMGUI_MBUT_LEFT   : 0)
-				| (m_mouseState.m_buttons[entry::MouseButton::Right ] ? IMGUI_MBUT_RIGHT  : 0)
-				| (m_mouseState.m_buttons[entry::MouseButton::Middle] ? IMGUI_MBUT_MIDDLE : 0)
-				,  m_mouseState.m_mz
-				, uint16_t(m_width)
-				, uint16_t(m_height)
-				);
+			//imguiBeginFrame(m_mouseState.m_mx
+			//	,  m_mouseState.m_my
+			//	, (m_mouseState.m_buttons[entry::MouseButton::Left  ] ? IMGUI_MBUT_LEFT   : 0)
+			//	| (m_mouseState.m_buttons[entry::MouseButton::Right ] ? IMGUI_MBUT_RIGHT  : 0)
+			//	| (m_mouseState.m_buttons[entry::MouseButton::Middle] ? IMGUI_MBUT_MIDDLE : 0)
+			//	,  m_mouseState.m_mz
+			//	, uint16_t(m_width)
+			//	, uint16_t(m_height)
+			//	);
 
-			showExampleDialog(this);
+			//showExampleDialog(this);
 
-			imguiEndFrame();
+			//imguiEndFrame();
 
 			int64_t now = bx::getHPCounter();
 			const double freq = double(bx::getHPFrequency() );
